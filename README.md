@@ -16,13 +16,13 @@
 
 ## 快速开始（便携版）
 
-1. 在 [Releases · V1.0](https://github.com/dmjsheng/Pet_baobao/releases/tag/V1.0) 下载 `爆爆桌面宠物.exe`
+1. 在 [Releases · V1.0](https://github.com/dmjsheng/Pet_baobao/releases/tag/V1.0) 下载 `Baobao-Desktop-Pet-V1.0.exe`
 2. 双击运行（也可复制到其他 Windows 10/11 电脑直接用）
 3. 右键宠物 → 退出
 
 无需安装 Node.js，也无需安装包。
 
-若你本地已有构建产物，也可进入 `release` 目录双击同名 EXE。
+本地重新构建后，产物文件名为 `release\爆爆桌面宠物.exe`。
 
 ## 从源码构建
 
