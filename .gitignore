@@ -1,0 +1,21 @@
+# Dependencies & build
+source/node_modules/
+source/dist/
+
+# Local workspaces & caches
+work/
+*.log
+
+# Electron builder output (keep portable EXE out of git; attach to GitHub Release)
+release/win-unpacked/
+release/builder-debug.yml
+release/builder-effective-config.yaml
+release/*.exe
+release/*.blockmap
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/

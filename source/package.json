@@ -1,0 +1,42 @@
+{
+  "name": "baobao-desktop-pet",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A portable Windows desktop pet for 爆爆.",
+  "main": "dist/main.js",
+  "scripts": {
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc && node scripts/build-renderer.cjs && node scripts/copy-static.mjs",
+    "dev": "npm run build && electron .",
+    "dist:portable": "npm run build && electron-builder --win portable"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.0",
+    "esbuild": "^0.28.1",
+    "typescript": "^5.8.0",
+    "vitest": "^3.2.0"
+  },
+  "build": {
+    "appId": "com.baobao.desktop-pet",
+    "productName": "爆爆桌面宠物",
+    "directories": {
+      "output": "../release"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../assets",
+        "to": "assets"
+      }
+    ],
+    "portable": {
+      "artifactName": "爆爆桌面宠物.exe"
+    }
+  }
+}

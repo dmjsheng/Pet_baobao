@@ -1,0 +1,26 @@
+:root { color-scheme: light; font-family: "Microsoft YaHei", sans-serif; }
+* { box-sizing: border-box; }
+body { margin: 0; overflow: hidden; background: transparent; }
+#pet-app { position: relative; width: 360px; height: 410px; display: grid; place-items: end center; }
+.pet { width: 310px; height: 335px; border: 0; padding: 0; cursor: grab; background: transparent; touch-action: none; filter: drop-shadow(0 8px 10px rgba(70, 40, 30, .18)); }
+.pet:active { cursor: grabbing; }
+.pet img { width: 100%; height: 100%; object-fit: contain; user-select: none; pointer-events: none; }
+.bubble { position: absolute; top: 12px; right: 18px; z-index: 2; max-width: 210px; margin: 0; padding: 10px 14px; border: 2px solid #805340; border-radius: 18px; background: #fff8ee; color: #5b382a; font-size: 14px; font-weight: 700; opacity: 0; transform: translateY(6px) scale(.96); transition: opacity .2s, transform .2s; pointer-events: none; }
+.bubble::after { content: ""; position: absolute; right: 34px; bottom: -9px; width: 15px; height: 15px; background: #fff8ee; border-right: 2px solid #805340; border-bottom: 2px solid #805340; transform: rotate(45deg); }
+.bubble.visible { opacity: 1; transform: translateY(0) scale(1); }
+.actions { position: absolute; bottom: 5px; z-index: 3; display: flex; gap: 6px; padding: 7px; border: 1px solid rgba(113, 69, 49, .35); border-radius: 16px; background: rgba(255, 248, 238, .94); opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity .18s, transform .18s; }
+#pet-app:hover .actions, .actions.forced-visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.actions button { border: 0; border-radius: 11px; padding: 7px 10px; color: #5b382a; background: #ffd9ad; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+.actions button:hover { background: #ffc585; }
+.pet[data-animation="look-around"] { animation: look-around var(--animation-duration) ease-in-out infinite; }
+.pet[data-animation="nuzzle"] { animation: nuzzle var(--animation-duration) ease-in-out 2; }
+.pet[data-animation="happy-bounce"] { animation: happy-bounce var(--animation-duration) cubic-bezier(.2,.8,.3,1) 2; }
+.pet[data-animation="listen"] { animation: listen var(--animation-duration) ease-in-out 2; }
+.pet[data-animation="sleep"] { animation: sleep var(--animation-duration) ease-in-out infinite; transform-origin: bottom center; }
+.pet[data-animation="wait"] { animation: wait var(--animation-duration) ease-in-out infinite; }
+@keyframes look-around { 0%,100% { transform: rotate(0) translateY(0); } 28% { transform: rotate(-2deg) translateY(-2px); } 58% { transform: rotate(2deg) translateY(0); } 78% { transform: scaleY(.985); } }
+@keyframes nuzzle { 0%,100% { transform: translateX(0) rotate(0); } 35% { transform: translateX(11px) rotate(3deg); } 70% { transform: translateX(-5px) rotate(-1deg); } }
+@keyframes happy-bounce { 0%,100% { transform: translateY(0) scale(1); } 40% { transform: translateY(-18px) scale(1.03,.97); } 70% { transform: translateY(0) scale(.98,1.03); } }
+@keyframes listen { 0%,100% { transform: rotate(0); } 38% { transform: rotate(-4deg); } 72% { transform: rotate(2deg); } }
+@keyframes sleep { 0%,100% { transform: scale(.91,.88) translateY(17px); } 50% { transform: scale(.94,.91) translateY(15px); } }
+@keyframes wait { 0%,100% { transform: translateY(0); } 45% { transform: translateY(-5px); } 65% { transform: translateY(0); } }
