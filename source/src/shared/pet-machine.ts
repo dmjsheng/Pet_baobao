@@ -8,7 +8,7 @@ export interface PetState {
   bubble: string;
 }
 
-export type PetAction = 'pet' | 'feed' | 'companion' | 'sleep';
+export type PetAction = 'pet' | 'feed' | 'companion' | 'sleep' | 'yarn';
 
 export function initialPetState(now = Date.now()): PetState {
   return {
@@ -28,16 +28,18 @@ export function interact(state: PetState, action: PetAction, now: number): PetSt
   }
 
   const response = action === 'pet'
-    ? { mode: 'petted' as const, bubble: '摸摸就不困啦' }
+    ? { mode: 'petted' as const, bubble: '摸摸就不困啦', affectionGain: 1 }
     : action === 'feed'
-      ? { mode: 'fed' as const, bubble: '零食收到！' }
-      : { mode: 'companion' as const, bubble: '我在这儿陪你' };
+      ? { mode: 'fed' as const, bubble: '零食收到！', affectionGain: 2 }
+      : action === 'yarn'
+        ? { mode: 'chasing' as const, bubble: '毛线球快跑！', affectionGain: 2 }
+        : { mode: 'companion' as const, bubble: '我在这儿陪你', affectionGain: 1 };
 
   return {
     ...state,
     ...response,
     sleeping: false,
-    affection: state.affection + 1,
+    affection: state.affection + response.affectionGain,
     lastInteractionAt: now,
   };
 }

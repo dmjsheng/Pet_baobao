@@ -1,6 +1,8 @@
 import { animationForMode } from './animation-profile';
 import { initialPetState, interact, type PetAction, type PetState } from '../shared/pet-machine';
 import type { PersistedPetState } from '../shared/types';
+import { effectsFor, type EffectKind } from '../shared/effect-sequence';
+import { scheduleAutonomousBehavior } from '../shared/behavior-scheduler';
 
 declare global {
   interface Window {
@@ -20,10 +22,12 @@ const pet = document.querySelector<HTMLButtonElement>('#pet')!;
 const image = document.querySelector<HTMLImageElement>('#pet-image')!;
 const bubble = document.querySelector<HTMLParagraphElement>('#bubble')!;
 const actions = document.querySelector<HTMLElement>('#actions')!;
+const effects = document.querySelector<HTMLElement>('#effects')!;
 let state: PetState = initialPetState();
-let persisted: PersistedPetState = { x: -1, y: -1, affection: 0, lastInteractionAt: Date.now(), sleeping: false };
+let persisted: PersistedPetState = { x: -1, y: -1, affection: 0, lastInteractionAt: Date.now(), lastAutonomousAt: Date.now(), sleeping: false };
 let bubbleTimer: number | undefined;
-let dragStart: { x: number; y: number } | null = null;
+let dragStart: { x: number; y: number; moved: boolean } | null = null;
+let ignoreNextClick = false;
 
 function save(): void {
   persisted = { ...persisted, affection: state.affection, lastInteractionAt: state.lastInteractionAt, sleeping: state.sleeping };
@@ -44,6 +48,48 @@ function render(showBubble = true): void {
 function apply(action: PetAction): void {
   state = interact(state, action, Date.now());
   render();
+  if (action === 'feed' || action === 'yarn') runEffects(action);
+  save();
+}
+
+function effectLabel(kind: EffectKind): string {
+  if (kind === 'treat') return '🍪';
+  if (kind === 'hearts') return '♥ ♥';
+  if (kind === 'yarn-ball') return '🧶';
+  return '';
+}
+
+function applyEffectMode(kind: EffectKind): void {
+  if (kind === 'chase') state = { ...state, mode: 'chasing' };
+  if (kind === 'pounce') state = { ...state, mode: 'pouncing' };
+  if (kind === 'look') state = { ...state, mode: 'idle' };
+  if (kind === 'chase' || kind === 'pounce' || kind === 'look') render(false);
+}
+
+function runEffects(action: 'feed' | 'yarn'): void {
+  for (const effect of effectsFor(action)) {
+    window.setTimeout(() => {
+      applyEffectMode(effect.kind);
+      const label = effectLabel(effect.kind);
+      if (!label) return;
+      const node = document.createElement('span');
+      node.className = `effect effect-${effect.kind}`;
+      node.textContent = label;
+      effects.append(node);
+      window.setTimeout(() => node.remove(), effect.durationMs);
+    }, effect.delayMs);
+  }
+}
+
+function checkAutonomousBehavior(): void {
+  const now = Date.now();
+  const baseInput = { now, lastInteractionAt: state.lastInteractionAt, lastAutonomousAt: persisted.lastAutonomousAt, sleeping: state.sleeping };
+  const eligibility = scheduleAutonomousBehavior({ ...baseInput, roll: 0.5 });
+  if (eligibility.kind === 'none') return;
+  const decision = eligibility.kind === 'sleep' ? eligibility : scheduleAutonomousBehavior({ ...baseInput, roll: Math.random() });
+  state = { ...state, mode: decision.mode, sleeping: decision.mode === 'sleeping', bubble: decision.bubble };
+  persisted = { ...persisted, lastAutonomousAt: now };
+  render(decision.bubble.length > 0);
   save();
 }
 
@@ -54,18 +100,25 @@ async function boot(): Promise<void> {
   render(false);
 }
 
-pet.addEventListener('click', () => apply('pet'));
+pet.addEventListener('click', () => {
+  if (ignoreNextClick) { ignoreNextClick = false; return; }
+  apply('pet');
+});
 actions.addEventListener('click', (event) => {
   const action = (event.target as HTMLButtonElement).dataset.action as PetAction | undefined;
   if (action) apply(action);
 });
 appRoot.addEventListener('contextmenu', (event) => { event.preventDefault(); window.baobao.menu(); });
-pet.addEventListener('pointerdown', (event) => { dragStart = { x: event.screenX, y: event.screenY }; pet.setPointerCapture(event.pointerId); });
+pet.addEventListener('pointerdown', (event) => { dragStart = { x: event.screenX, y: event.screenY, moved: false }; pet.setPointerCapture(event.pointerId); });
 pet.addEventListener('pointermove', (event) => {
   if (!dragStart) return;
-  window.baobao.drag({ x: event.screenX - dragStart.x, y: event.screenY - dragStart.y });
-  dragStart = { x: event.screenX, y: event.screenY };
+  const x = event.screenX - dragStart.x;
+  const y = event.screenY - dragStart.y;
+  if (Math.abs(x) + Math.abs(y) > 4) dragStart.moved = true;
+  window.baobao.drag({ x, y });
+  dragStart = { x: event.screenX, y: event.screenY, moved: dragStart.moved };
 });
-pet.addEventListener('pointerup', () => { dragStart = null; });
+pet.addEventListener('pointerup', () => { ignoreNextClick = dragStart?.moved ?? false; dragStart = null; });
 window.baobao.onToggleControls(() => actions.classList.toggle('forced-visible'));
 void boot();
+window.setInterval(checkAutonomousBehavior, 30_000);

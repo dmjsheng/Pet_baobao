@@ -12,6 +12,7 @@ release/builder-debug.yml
 release/builder-effective-config.yaml
 release/*.exe
 release/*.blockmap
+exe/
 
 # OS / editor
 .DS_Store

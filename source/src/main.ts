@@ -4,8 +4,12 @@ import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { sanitizePersistedState } from './shared/persistence';
 import type { PersistedPetState } from './shared/types';
+import { withSavedWindowPosition } from './shared/window-position';
 
-const defaultState = (): PersistedPetState => ({ x: -1, y: -1, affection: 0, lastInteractionAt: Date.now(), sleeping: false });
+const defaultState = (): PersistedPetState => {
+  const now = Date.now();
+  return { x: -1, y: -1, affection: 0, lastInteractionAt: now, lastAutonomousAt: now, sleeping: false };
+};
 const stateFile = () => join(app.getPath('userData'), 'baobao-state.json');
 const loadState = (): PersistedPetState => {
   try {
@@ -16,6 +20,7 @@ const loadState = (): PersistedPetState => {
   }
 };
 const saveState = (state: PersistedPetState) => writeFileSync(stateFile(), JSON.stringify(state), 'utf8');
+const asPosition = ([x, y]: number[]): [number, number] => [x, y];
 
 let windowRef: BrowserWindow | null = null;
 let petState = defaultState();
@@ -55,18 +60,29 @@ app.whenReady().then(() => {
   ipcMain.on('baobao:save', (_event, candidate: unknown) => {
     const safe = sanitizePersistedState(candidate);
     if (!safe) return;
-    petState = safe;
-    saveState(safe);
+    petState = windowRef ? withSavedWindowPosition(safe, asPosition(windowRef.getPosition())) : safe;
+    saveState(petState);
   });
   ipcMain.on('baobao:drag', (_event, delta: { x: number; y: number }) => {
     if (!windowRef || !Number.isFinite(delta?.x) || !Number.isFinite(delta?.y)) return;
     const [x, y] = windowRef.getPosition();
     windowRef.setPosition(Math.round(x + delta.x), Math.round(y + delta.y));
+    petState = withSavedWindowPosition(petState, asPosition(windowRef.getPosition()));
+    saveState(petState);
   });
   ipcMain.on('baobao:menu', () => {
     const menu = Menu.buildFromTemplate([
       { label: '显示/隐藏操作条', click: () => windowRef?.webContents.send('baobao:toggle-controls') },
-      { label: '重置位置', click: () => { petState = { ...petState, x: -1, y: -1 }; saveState(petState); windowRef?.setPosition(...initialPosition()); } },
+      {
+        label: '重置位置',
+        click: () => {
+          petState = { ...petState, x: -1, y: -1 };
+          const position = initialPosition();
+          windowRef?.setPosition(...position);
+          petState = withSavedWindowPosition(petState, position);
+          saveState(petState);
+        },
+      },
       { type: 'separator' },
       { label: '退出爆爆', click: () => app.quit() },
     ]);

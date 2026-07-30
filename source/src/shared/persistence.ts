@@ -12,6 +12,9 @@ export function sanitizePersistedState(value: unknown): PersistedPetState | null
     y: raw.y as number,
     affection: Math.max(0, raw.affection as number),
     lastInteractionAt: raw.lastInteractionAt as number,
+    lastAutonomousAt: typeof raw.lastAutonomousAt === 'number' && Number.isFinite(raw.lastAutonomousAt)
+      ? raw.lastAutonomousAt
+      : raw.lastInteractionAt as number,
     sleeping: raw.sleeping,
   };
 }

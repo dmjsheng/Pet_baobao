@@ -1,7 +1,7 @@
 import type { PetMode } from '../shared/types';
 
 export interface AnimationProfile {
-  name: 'look-around' | 'nuzzle' | 'happy-bounce' | 'listen' | 'sleep' | 'wait';
+  name: 'look-around' | 'nuzzle' | 'happy-bounce' | 'listen' | 'sleep' | 'wait' | 'stretch' | 'groom' | 'chase' | 'pounce';
   durationMs: number;
 }
 
@@ -12,6 +12,10 @@ const profiles: Record<PetMode, AnimationProfile> = {
   companion: { name: 'listen', durationMs: 1800 },
   sleeping: { name: 'sleep', durationMs: 3200 },
   waiting: { name: 'wait', durationMs: 1600 },
+  stretch: { name: 'stretch', durationMs: 1500 },
+  groom: { name: 'groom', durationMs: 1700 },
+  chasing: { name: 'chase', durationMs: 900 },
+  pouncing: { name: 'pounce', durationMs: 650 },
 };
 
 export function animationForMode(mode: PetMode): AnimationProfile {
