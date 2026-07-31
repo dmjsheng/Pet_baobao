@@ -23,6 +23,7 @@ body { margin: 0; overflow: hidden; background: transparent; }
 .pet[data-animation="listen"] { animation: listen var(--animation-duration) ease-in-out 2; }
 .pet[data-animation="sleep"] { animation: sleep var(--animation-duration) ease-in-out infinite; transform-origin: bottom center; }
 .pet[data-animation="wait"] { animation: wait var(--animation-duration) ease-in-out infinite; }
+.pet[data-animation="frame"] { animation: none; }
 .pet[data-animation="stretch"] { animation: stretch var(--animation-duration) ease-in-out 1; transform-origin: bottom center; }
 .pet[data-animation="groom"] { animation: groom var(--animation-duration) ease-in-out 2; transform-origin: bottom center; }
 .pet[data-animation="chase"] { animation: chase var(--animation-duration) cubic-bezier(.2,.8,.3,1) 1; }

@@ -1,4 +1,4 @@
-import type { PetMode } from './types';
+import type { FrameActionId, PetMode } from './types';
 
 export interface PetState {
   mode: PetMode;
@@ -9,6 +9,13 @@ export interface PetState {
 }
 
 export type PetAction = 'pet' | 'feed' | 'companion' | 'sleep' | 'yarn';
+
+export function frameActionForPetAction(action: PetAction): FrameActionId | null {
+  if (action === 'pet') return 'pet-nuzzle';
+  if (action === 'feed') return 'eat-treat';
+  if (action === 'yarn') return 'yarn-chase';
+  return null;
+}
 
 export function initialPetState(now = Date.now()): PetState {
   return {

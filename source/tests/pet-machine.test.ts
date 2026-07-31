@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { initialPetState, interact } from '../src/shared/pet-machine';
+import { frameActionForPetAction, initialPetState, interact } from '../src/shared/pet-machine';
 
 describe('initialPetState', () => {
   it('starts awake and idle', () => {
@@ -29,5 +29,17 @@ describe('interact', () => {
     const asleep = interact(initialPetState(1), 'sleep', 2);
     expect(asleep.mode).toBe('sleeping');
     expect(interact(asleep, 'sleep', 3).mode).toBe('idle');
+  });
+});
+
+describe('frameActionForPetAction', () => {
+  it.each([
+    ['pet', 'pet-nuzzle'],
+    ['feed', 'eat-treat'],
+    ['yarn', 'yarn-chase'],
+    ['companion', null],
+    ['sleep', null],
+  ] as const)('maps %s to its available frame animation', (action, animation) => {
+    expect(frameActionForPetAction(action)).toBe(animation);
   });
 });

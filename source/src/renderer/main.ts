@@ -1,8 +1,9 @@
 import { animationForMode } from './animation-profile';
-import { initialPetState, interact, type PetAction, type PetState } from '../shared/pet-machine';
-import type { PersistedPetState } from '../shared/types';
+import { frameActionForPetAction, initialPetState, interact, type PetAction, type PetState } from '../shared/pet-machine';
+import type { FrameActionId, PersistedPetState } from '../shared/types';
 import { effectsFor, type EffectKind } from '../shared/effect-sequence';
 import { scheduleAutonomousBehavior } from '../shared/behavior-scheduler';
+import { FRAME_ANIMATIONS, frameIndexFor, isFinished } from './frame-animation';
 
 declare global {
   interface Window {
@@ -28,6 +29,10 @@ let persisted: PersistedPetState = { x: -1, y: -1, affection: 0, lastInteraction
 let bubbleTimer: number | undefined;
 let dragStart: { x: number; y: number; moved: boolean } | null = null;
 let ignoreNextClick = false;
+let baseImageUrl = '';
+let activeFrameAction: FrameActionId | null = null;
+let frameStartedAt = 0;
+let frameTimer: number | undefined;
 
 function save(): void {
   persisted = { ...persisted, affection: state.affection, lastInteractionAt: state.lastInteractionAt, sleeping: state.sleeping };
@@ -36,7 +41,7 @@ function save(): void {
 
 function render(showBubble = true): void {
   const profile = animationForMode(state.mode);
-  pet.dataset.animation = profile.name;
+  pet.dataset.animation = activeFrameAction ? 'frame' : profile.name;
   pet.style.setProperty('--animation-duration', `${profile.durationMs}ms`);
   if (!showBubble) return;
   bubble.textContent = state.bubble;
@@ -47,9 +52,41 @@ function render(showBubble = true): void {
 
 function apply(action: PetAction): void {
   state = interact(state, action, Date.now());
+  const frameAction = frameActionForPetAction(action);
+  if (frameAction) startFrameAnimation(frameAction);
+  else if (action === 'sleep' && !state.sleeping) startFrameAnimation('idle-look');
+  else stopFrameAnimation();
   render();
   if (action === 'feed' || action === 'yarn') runEffects(action);
   save();
+}
+
+function frameUrl(action: FrameActionId, index: number): string {
+  return new URL(`frames/${action}/${String(index).padStart(3, '0')}.png`, baseImageUrl).toString();
+}
+
+function startFrameAnimation(action: FrameActionId): void {
+  activeFrameAction = action;
+  frameStartedAt = performance.now();
+  refreshFrame();
+}
+
+function stopFrameAnimation(): void {
+  activeFrameAction = null;
+  if (baseImageUrl) image.src = baseImageUrl;
+}
+
+function refreshFrame(): void {
+  if (!activeFrameAction || !baseImageUrl) return;
+  const animation = FRAME_ANIMATIONS[activeFrameAction];
+  const elapsedMs = performance.now() - frameStartedAt;
+  const index = frameIndexFor(animation, elapsedMs);
+  const url = frameUrl(activeFrameAction, index);
+  if (image.src !== url) image.src = url;
+  if (isFinished(animation, elapsedMs)) {
+    activeFrameAction = 'idle-look';
+    frameStartedAt = performance.now();
+  }
 }
 
 function effectLabel(kind: EffectKind): string {
@@ -88,6 +125,7 @@ function checkAutonomousBehavior(): void {
   if (eligibility.kind === 'none') return;
   const decision = eligibility.kind === 'sleep' ? eligibility : scheduleAutonomousBehavior({ ...baseInput, roll: Math.random() });
   state = { ...state, mode: decision.mode, sleeping: decision.mode === 'sleeping', bubble: decision.bubble };
+  stopFrameAnimation();
   persisted = { ...persisted, lastAutonomousAt: now };
   render(decision.bubble.length > 0);
   save();
@@ -96,8 +134,11 @@ function checkAutonomousBehavior(): void {
 async function boot(): Promise<void> {
   persisted = await window.baobao.load();
   state = { ...initialPetState(persisted.lastInteractionAt), sleeping: persisted.sleeping, affection: persisted.affection, mode: persisted.sleeping ? 'sleeping' : 'idle', bubble: persisted.sleeping ? '爆爆先眯一会儿' : '我在看你呀' };
-  image.src = await window.baobao.assetUrl();
+  baseImageUrl = await window.baobao.assetUrl();
+  image.src = baseImageUrl;
+  if (!persisted.sleeping) startFrameAnimation('idle-look');
   render(false);
+  frameTimer = window.setInterval(refreshFrame, 40);
 }
 
 pet.addEventListener('click', () => {

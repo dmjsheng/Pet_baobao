@@ -5,8 +5,9 @@
 ## 安静陪伴行为
 
 - 全程静音，不播放猫叫、提示音或系统通知。
-- 喂食后会出现小零食、开心跳跃和两颗小爱心。
-- 玩毛线球时会依次追球、扑跃，再回头看你。
+- 第三版新增 28 张透明逐帧动画：待机眨眼、抚摸蹭蹭、吃零食、追毛线球。
+- 喂食时爆爆会完整地看零食、伸爪、低头吃、满足眯眼，再出现两颗小爱心。
+- 玩毛线球时爆爆会按帧追球、扑跃，再回头看你。
 - 用户互动后的 15 分钟内保持安静；自主小动作之间至少相隔 8 分钟。
 - 20 分钟没有互动会自动睡觉；点击爆爆或选择任意互动即可唤醒。
 - 拖动后的桌面位置、亲密度和睡眠/冷却状态会保存到当前 Windows 用户的本地应用数据目录。
@@ -39,10 +40,12 @@ npm.cmd run build
 
 - `source`：Electron + TypeScript 源码、单元测试与构建配置。
 - `assets\baobao\baobao.png`：从爆爆照片生成并抠图后的透明主视觉。
+- `assets\baobao\frames`：第三版四组逐帧动画资源；随便携版一同复制，移植时不需要额外下载。
+- `assets\baobao\sheets`：生成帧的原始序列图，便于后续重新裁切或调整。
 - `work\hatch-run`：动画精灵图生成工作目录；不随应用运行。
 - `docs`：设计与实现计划。
 - `qa`：完整动画精灵图完成后会存放校验产物。
 
 ## 版本
 
-当前发布版为 **V1.1**。完整说明与下载见根目录 [README.md](./README.md) 与 [GitHub Releases](https://github.com/dmjsheng/Pet_baobao/releases)。
+当前发布版为 **V1.3**。完整说明与下载见根目录 [README.md](./README.md) 与 [GitHub Releases](https://github.com/dmjsheng/Pet_baobao/releases)。
