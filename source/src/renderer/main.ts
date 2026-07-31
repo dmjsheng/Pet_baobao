@@ -1,5 +1,5 @@
 import { animationForMode } from './animation-profile';
-import { frameActionForPetAction, initialPetState, interact, type PetAction, type PetState } from '../shared/pet-machine';
+import { frameActionForPetAction, initialPetState, interact, persistentFrameActionForState, type PetAction, type PetState } from '../shared/pet-machine';
 import type { FrameActionId, PersistedPetState } from '../shared/types';
 import { effectsFor, type EffectKind } from '../shared/effect-sequence';
 import { scheduleAutonomousBehavior } from '../shared/behavior-scheduler';
@@ -52,7 +52,7 @@ function render(showBubble = true): void {
 
 function apply(action: PetAction): void {
   state = interact(state, action, Date.now());
-  const frameAction = frameActionForPetAction(action);
+  const frameAction = persistentFrameActionForState(state) ?? frameActionForPetAction(action);
   if (frameAction) startFrameAnimation(frameAction);
   else if (action === 'sleep' && !state.sleeping) startFrameAnimation('idle-look');
   else stopFrameAnimation();
@@ -125,7 +125,9 @@ function checkAutonomousBehavior(): void {
   if (eligibility.kind === 'none') return;
   const decision = eligibility.kind === 'sleep' ? eligibility : scheduleAutonomousBehavior({ ...baseInput, roll: Math.random() });
   state = { ...state, mode: decision.mode, sleeping: decision.mode === 'sleeping', bubble: decision.bubble };
-  stopFrameAnimation();
+  const frameAction = persistentFrameActionForState(state);
+  if (frameAction) startFrameAnimation(frameAction);
+  else stopFrameAnimation();
   persisted = { ...persisted, lastAutonomousAt: now };
   render(decision.bubble.length > 0);
   save();
@@ -136,7 +138,7 @@ async function boot(): Promise<void> {
   state = { ...initialPetState(persisted.lastInteractionAt), sleeping: persisted.sleeping, affection: persisted.affection, mode: persisted.sleeping ? 'sleeping' : 'idle', bubble: persisted.sleeping ? '爆爆先眯一会儿' : '我在看你呀' };
   baseImageUrl = await window.baobao.assetUrl();
   image.src = baseImageUrl;
-  if (!persisted.sleeping) startFrameAnimation('idle-look');
+  startFrameAnimation(persistentFrameActionForState(state) ?? 'idle-look');
   render(false);
   frameTimer = window.setInterval(refreshFrame, 40);
 }

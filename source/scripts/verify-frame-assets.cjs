@@ -2,7 +2,14 @@ const { existsSync, readdirSync, readFileSync } = require('node:fs');
 const { join } = require('node:path');
 
 const root = join(__dirname, '..', '..', 'assets', 'baobao', 'frames');
-const expected = { 'idle-look': 4, 'pet-nuzzle': 6, 'eat-treat': 8, 'yarn-chase': 8 };
+const expected = {
+  'idle-look': 4,
+  'pet-nuzzle': 6,
+  'eat-treat': 8,
+  'yarn-chase': 8,
+  'companion-sit': 4,
+  'sleep-curl': 4,
+};
 const errors = [];
 const sizes = new Set();
 
@@ -30,4 +37,4 @@ if (errors.length) {
   console.error(errors.join('\n'));
   process.exit(1);
 }
-console.log('Verified 26 V3 frame assets: four continuous groups, all 512x512 PNG.');
+console.log('Verified 34 V4 frame assets: six continuous groups, all 512x512 PNG.');

@@ -14,7 +14,12 @@ export function frameActionForPetAction(action: PetAction): FrameActionId | null
   if (action === 'pet') return 'pet-nuzzle';
   if (action === 'feed') return 'eat-treat';
   if (action === 'yarn') return 'yarn-chase';
+  if (action === 'companion') return 'companion-sit';
   return null;
+}
+
+export function persistentFrameActionForState(state: Pick<PetState, 'sleeping'>): FrameActionId | null {
+  return state.sleeping ? 'sleep-curl' : null;
 }
 
 export function initialPetState(now = Date.now()): PetState {

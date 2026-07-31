@@ -2,7 +2,7 @@
 
 暖色 Q 版暹罗猫「爆爆」的 Windows 透明悬浮桌面宠物。可拖动、始终置顶；点击抚摸，悬停后可喂食、玩毛线球、陪伴或睡觉。
 
-**版本：V1.3** · 帧动画 · 安静陪伴 · 全程静音 · 本地运行 · 不联网 · 不上传数据
+**版本：V1.4** · 端坐陪伴 · 蜷睡姿势 · 帧动画 · 全程静音 · 本地运行
 
 仓库：[github.com/dmjsheng/Pet_baobao](https://github.com/dmjsheng/Pet_baobao)
 
@@ -15,20 +15,22 @@
 - 窗口位置与亲密度等状态保存在当前 Windows 用户本地目录；旧版本状态自动兼容
 - 全程静音；互动后 15 分钟不主动打扰；自主动作间隔至少 8 分钟；20 分钟未互动自动睡觉
 
-### V1.3 更新
+### V1.4 更新
 
-修复闲置眨眼视觉问题，并优化日常动画节奏：
+- **陪伴**：切换成端正坐姿、直视你；约 3.6 秒后缓慢眨眼
+- **睡觉**：切换为蜷成一团、闭眼睡觉，带极轻微呼吸帧；再点一次醒来恢复站姿
+- 睡着时抚摸、喂食、陪伴或玩毛线球，会先唤醒再响应互动
+- 自主睡眠与重启后恢复的睡眠状态，也会显示蜷睡姿势
+- 新动作均经过透明化、主体对齐与视觉检查，避免帧切换抖动或碎片
 
-- 修复闲置状态下猫咪主体持续左右晃动的问题
-- 修复眨眼动画头顶出现残留脚部碎片的问题
-- 移除两张存在裁切异常的闲置动画帧
-- 将保留的眨眼帧统一对齐到相同落点，避免切换帧时整只猫发生位移
-- 闲置约稳定停留 3.6 秒后，快速完成一次约 0.29 秒的眨眼
-- 不再持续循环整套动作，更自然、安静
+### 近期版本
+
+- **V1.3**：修复闲置眨眼晃动与头顶碎片，优化眨眼节奏
+- **V1.1**：安静陪伴、喂食/毛线球动效、自动睡觉
 
 ## 快速开始（便携版）
 
-1. 在 [Releases · V1.3](https://github.com/dmjsheng/Pet_baobao/releases/tag/V1.3) 下载 `Baobao-Desktop-Pet-V1.3.exe`
+1. 在 [Releases · V1.4](https://github.com/dmjsheng/Pet_baobao/releases/tag/V1.4) 下载 `Baobao-Desktop-Pet-V1.4.exe`
 2. 双击运行（也可复制到其他 Windows 10/11 电脑直接用）
 3. 右键宠物 → 退出
 
@@ -36,7 +38,7 @@
 
 本地重新构建后，产物文件名为 `release\爆爆桌面宠物.exe`。
 
-历史版本：[V1.1](https://github.com/dmjsheng/Pet_baobao/releases/tag/V1.1) · [V1.0](https://github.com/dmjsheng/Pet_baobao/releases/tag/V1.0)
+历史版本：[V1.3](https://github.com/dmjsheng/Pet_baobao/releases/tag/V1.3) · [V1.1](https://github.com/dmjsheng/Pet_baobao/releases/tag/V1.1) · [V1.0](https://github.com/dmjsheng/Pet_baobao/releases/tag/V1.0)
 
 ## 从源码构建
 
@@ -65,7 +67,7 @@ npm.cmd run dev
 | 路径 | 说明 |
 | --- | --- |
 | `source/` | Electron + TypeScript 源码、测试与构建配置 |
-| `assets/baobao/frames/` | 逐帧动画 PNG（512×512） |
+| `assets/baobao/frames/` | 逐帧动画 PNG（512×512，含端坐与蜷睡） |
 | `assets/baobao/sheets/` | 序列图源，便于重新裁切 |
 | `docs/` | 设计与实现计划 |
 | `release/` | 本地构建输出（便携 EXE；仓库内通常不提交） |

@@ -12,6 +12,8 @@ export const FRAME_ANIMATIONS: Record<FrameActionId, FrameAnimation> = {
   'pet-nuzzle': { frameCount: 6, frameDurationMs: 115, loop: false },
   'eat-treat': { frameCount: 8, frameDurationMs: 150, loop: false },
   'yarn-chase': { frameCount: 8, frameDurationMs: 110, loop: false },
+  'companion-sit': { frameCount: 4, frameDurationMs: 0, frameDurationsMs: [3_600, 90, 110, 90], loop: true },
+  'sleep-curl': { frameCount: 4, frameDurationMs: 1_400, loop: true },
 };
 
 export function frameIndexFor(animation: FrameAnimation, elapsedMs: number): number {

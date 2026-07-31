@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { frameActionForPetAction, initialPetState, interact } from '../src/shared/pet-machine';
+import { frameActionForPetAction, initialPetState, interact, persistentFrameActionForState } from '../src/shared/pet-machine';
 
 describe('initialPetState', () => {
   it('starts awake and idle', () => {
@@ -37,9 +37,16 @@ describe('frameActionForPetAction', () => {
     ['pet', 'pet-nuzzle'],
     ['feed', 'eat-treat'],
     ['yarn', 'yarn-chase'],
-    ['companion', null],
+    ['companion', 'companion-sit'],
     ['sleep', null],
   ] as const)('maps %s to its available frame animation', (action, animation) => {
     expect(frameActionForPetAction(action)).toBe(animation);
+  });
+});
+
+describe('persistentFrameActionForState', () => {
+  it('uses the curled sleeping frames only while asleep', () => {
+    expect(persistentFrameActionForState({ sleeping: true })).toBe('sleep-curl');
+    expect(persistentFrameActionForState({ sleeping: false })).toBeNull();
   });
 });

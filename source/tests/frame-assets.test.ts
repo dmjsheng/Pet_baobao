@@ -3,7 +3,14 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const assetRoot = join(process.cwd(), '..', 'assets', 'baobao', 'frames');
-const expectedFrames = { 'idle-look': 4, 'pet-nuzzle': 6, 'eat-treat': 8, 'yarn-chase': 8 } as const;
+const expectedFrames = {
+  'idle-look': 4,
+  'pet-nuzzle': 6,
+  'eat-treat': 8,
+  'yarn-chase': 8,
+  'companion-sit': 4,
+  'sleep-curl': 4,
+} as const;
 
 function pngSize(path: string): [number, number] {
   const bytes = readFileSync(path);
