@@ -6,7 +6,4 @@ describe('effectsFor', () => {
     expect(effectsFor('feed').map(({ kind }) => kind)).toEqual(['treat', 'hearts']);
   });
 
-  it('keeps the yarn-ball play story in its visible order', () => {
-    expect(effectsFor('yarn').map(({ kind }) => kind)).toEqual(['yarn-ball', 'chase', 'pounce', 'look']);
-  });
 });

@@ -6,8 +6,8 @@ const assetRoot = join(process.cwd(), '..', 'assets', 'baobao', 'frames');
 const expectedFrames = {
   'idle-look': 4,
   'pet-nuzzle': 6,
-  'eat-treat': 8,
-  'yarn-chase': 8,
+  'eat-treat': 6,
+  'knead-paws': 8,
   'companion-sit': 4,
   'sleep-curl': 4,
 } as const;

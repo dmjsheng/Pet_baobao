@@ -57,7 +57,7 @@ function apply(action: PetAction): void {
   else if (action === 'sleep' && !state.sleeping) startFrameAnimation('idle-look');
   else stopFrameAnimation();
   render();
-  if (action === 'feed' || action === 'yarn') runEffects(action);
+  if (action === 'feed') runEffects('feed');
   save();
 }
 
@@ -92,21 +92,12 @@ function refreshFrame(): void {
 function effectLabel(kind: EffectKind): string {
   if (kind === 'treat') return '🍪';
   if (kind === 'hearts') return '♥ ♥';
-  if (kind === 'yarn-ball') return '🧶';
   return '';
 }
 
-function applyEffectMode(kind: EffectKind): void {
-  if (kind === 'chase') state = { ...state, mode: 'chasing' };
-  if (kind === 'pounce') state = { ...state, mode: 'pouncing' };
-  if (kind === 'look') state = { ...state, mode: 'idle' };
-  if (kind === 'chase' || kind === 'pounce' || kind === 'look') render(false);
-}
-
-function runEffects(action: 'feed' | 'yarn'): void {
+function runEffects(action: 'feed'): void {
   for (const effect of effectsFor(action)) {
     window.setTimeout(() => {
-      applyEffectMode(effect.kind);
       const label = effectLabel(effect.kind);
       if (!label) return;
       const node = document.createElement('span');

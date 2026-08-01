@@ -26,14 +26,24 @@ describe('frameIndexFor', () => {
     expect(frameIndexFor(FRAME_ANIMATIONS['sleep-curl'], 5_600)).toBe(0);
   });
 
+  it('holds petting on its sixth stable frame', () => {
+    expect(frameIndexFor(FRAME_ANIMATIONS['pet-nuzzle'], 699)).toBe(4);
+  });
+
+  it('takes 1.84 seconds to complete eight unhurried kneading beats', () => {
+    expect(frameIndexFor(FRAME_ANIMATIONS['knead-paws'], 1_839)).toBe(7);
+    expect(isFinished(FRAME_ANIMATIONS['knead-paws'], 1_839)).toBe(false);
+    expect(isFinished(FRAME_ANIMATIONS['knead-paws'], 1_840)).toBe(true);
+  });
+
   it('holds a one-shot nuzzle on its final frame', () => {
-    expect(frameIndexFor(FRAME_ANIMATIONS['pet-nuzzle'], 690)).toBe(5);
+    expect(frameIndexFor(FRAME_ANIMATIONS['pet-nuzzle'], 840)).toBe(5);
   });
 });
 
 describe('isFinished', () => {
   it('finishes a one-shot nuzzle after its six frames', () => {
-    expect(isFinished(FRAME_ANIMATIONS['pet-nuzzle'], 691)).toBe(true);
+    expect(isFinished(FRAME_ANIMATIONS['pet-nuzzle'], 840)).toBe(true);
   });
 
   it('never finishes the idle loop', () => {

@@ -11,8 +11,7 @@ describe('animationForMode', () => {
     ['waiting', 'wait'],
     ['stretch', 'stretch'],
     ['groom', 'groom'],
-    ['chasing', 'chase'],
-    ['pouncing', 'pounce'],
+    ['kneading', 'listen'],
   ] as const)('maps %s to a visual animation', (mode, animation) => {
     expect(animationForMode(mode).name).toBe(animation);
   });

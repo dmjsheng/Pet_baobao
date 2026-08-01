@@ -13,7 +13,7 @@ describe('interact', () => {
     ['pet', 'petted', '摸摸就不困啦'],
     ['feed', 'fed', '零食收到！'],
     ['companion', 'companion', '我在这儿陪你'],
-    ['yarn', 'chasing', '毛线球快跑！'],
+    ['knead', 'kneading', '给你踩踩奶～'],
   ] as const)('maps %s to the expected mode and bubble', (action, mode, bubble) => {
     const next = interact(initialPetState(1), action, 2);
     expect(next.mode).toBe(mode);
@@ -21,7 +21,7 @@ describe('interact', () => {
     expect(next.affection).toBeGreaterThan(0);
   });
 
-  it.each(['feed', 'yarn'] as const)('%s builds two points of affection', (action) => {
+  it.each(['feed', 'knead'] as const)('%s builds two points of affection', (action) => {
     expect(interact(initialPetState(1), action, 2).affection).toBe(2);
   });
 
@@ -36,7 +36,7 @@ describe('frameActionForPetAction', () => {
   it.each([
     ['pet', 'pet-nuzzle'],
     ['feed', 'eat-treat'],
-    ['yarn', 'yarn-chase'],
+    ['knead', 'knead-paws'],
     ['companion', 'companion-sit'],
     ['sleep', null],
   ] as const)('maps %s to its available frame animation', (action, animation) => {

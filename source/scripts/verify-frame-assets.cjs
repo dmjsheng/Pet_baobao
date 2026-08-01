@@ -5,8 +5,8 @@ const root = join(__dirname, '..', '..', 'assets', 'baobao', 'frames');
 const expected = {
   'idle-look': 4,
   'pet-nuzzle': 6,
-  'eat-treat': 8,
-  'yarn-chase': 8,
+  'eat-treat': 6,
+  'knead-paws': 8,
   'companion-sit': 4,
   'sleep-curl': 4,
 };
@@ -37,4 +37,4 @@ if (errors.length) {
   console.error(errors.join('\n'));
   process.exit(1);
 }
-console.log('Verified 34 V4 frame assets: six continuous groups, all 512x512 PNG.');
+console.log('Verified 32 stable frame assets: six continuous groups, all 512x512 PNG.');

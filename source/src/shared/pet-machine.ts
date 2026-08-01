@@ -8,12 +8,12 @@ export interface PetState {
   bubble: string;
 }
 
-export type PetAction = 'pet' | 'feed' | 'companion' | 'sleep' | 'yarn';
+export type PetAction = 'pet' | 'feed' | 'companion' | 'sleep' | 'knead';
 
 export function frameActionForPetAction(action: PetAction): FrameActionId | null {
   if (action === 'pet') return 'pet-nuzzle';
   if (action === 'feed') return 'eat-treat';
-  if (action === 'yarn') return 'yarn-chase';
+  if (action === 'knead') return 'knead-paws';
   if (action === 'companion') return 'companion-sit';
   return null;
 }
@@ -43,8 +43,8 @@ export function interact(state: PetState, action: PetAction, now: number): PetSt
     ? { mode: 'petted' as const, bubble: '摸摸就不困啦', affectionGain: 1 }
     : action === 'feed'
       ? { mode: 'fed' as const, bubble: '零食收到！', affectionGain: 2 }
-      : action === 'yarn'
-        ? { mode: 'chasing' as const, bubble: '毛线球快跑！', affectionGain: 2 }
+      : action === 'knead'
+        ? { mode: 'kneading' as const, bubble: '给你踩踩奶～', affectionGain: 2 }
         : { mode: 'companion' as const, bubble: '我在这儿陪你', affectionGain: 1 };
 
   return {
