@@ -14,6 +14,8 @@ describe('interact', () => {
     ['feed', 'fed', '零食收到！'],
     ['companion', 'companion', '我在这儿陪你'],
     ['knead', 'kneading', '给你踩踩奶～'],
+    ['stretch', 'stretch', '伸个懒腰给你看～'],
+    ['groom', 'groom', '洗洗脸，继续陪你～'],
   ] as const)('maps %s to the expected mode and bubble', (action, mode, bubble) => {
     const next = interact(initialPetState(1), action, 2);
     expect(next.mode).toBe(mode);
@@ -37,6 +39,8 @@ describe('frameActionForPetAction', () => {
     ['pet', 'pet-nuzzle'],
     ['feed', 'eat-treat'],
     ['knead', 'knead-paws'],
+    ['stretch', 'stretch-paws'],
+    ['groom', 'groom-face'],
     ['companion', 'companion-sit'],
     ['sleep', null],
   ] as const)('maps %s to its available frame animation', (action, animation) => {

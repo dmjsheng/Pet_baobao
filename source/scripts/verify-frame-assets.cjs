@@ -7,6 +7,8 @@ const expected = {
   'pet-nuzzle': 6,
   'eat-treat': 6,
   'knead-paws': 8,
+  'stretch-paws': 6,
+  'groom-face': 6,
   'companion-sit': 4,
   'sleep-curl': 4,
 };
@@ -37,4 +39,4 @@ if (errors.length) {
   console.error(errors.join('\n'));
   process.exit(1);
 }
-console.log('Verified 32 stable frame assets: six continuous groups, all 512x512 PNG.');
+console.log('Verified 44 stable frame assets: eight continuous groups, all 512x512 PNG.');

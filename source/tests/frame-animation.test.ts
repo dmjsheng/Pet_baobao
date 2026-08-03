@@ -26,24 +26,32 @@ describe('frameIndexFor', () => {
     expect(frameIndexFor(FRAME_ANIMATIONS['sleep-curl'], 5_600)).toBe(0);
   });
 
-  it('holds petting on its sixth stable frame', () => {
-    expect(frameIndexFor(FRAME_ANIMATIONS['pet-nuzzle'], 699)).toBe(4);
+  it('moves petting gradually before holding the affectionate response', () => {
+    expect(frameIndexFor(FRAME_ANIMATIONS['pet-nuzzle'], 699)).toBe(2);
+    expect(frameIndexFor(FRAME_ANIMATIONS['pet-nuzzle'], 1_010)).toBe(4);
   });
 
-  it('takes 1.84 seconds to complete eight unhurried kneading beats', () => {
-    expect(frameIndexFor(FRAME_ANIMATIONS['knead-paws'], 1_839)).toBe(7);
-    expect(isFinished(FRAME_ANIMATIONS['knead-paws'], 1_839)).toBe(false);
-    expect(isFinished(FRAME_ANIMATIONS['knead-paws'], 1_840)).toBe(true);
+  it('takes 2.42 seconds to complete eight calm kneading beats', () => {
+    expect(frameIndexFor(FRAME_ANIMATIONS['knead-paws'], 2_419)).toBe(7);
+    expect(isFinished(FRAME_ANIMATIONS['knead-paws'], 2_419)).toBe(false);
+    expect(isFinished(FRAME_ANIMATIONS['knead-paws'], 2_420)).toBe(true);
   });
 
-  it('holds a one-shot nuzzle on its final frame', () => {
-    expect(frameIndexFor(FRAME_ANIMATIONS['pet-nuzzle'], 840)).toBe(5);
+  it('uses held key poses for slower stretching and grooming', () => {
+    expect(isFinished(FRAME_ANIMATIONS['stretch-paws'], 1_899)).toBe(false);
+    expect(isFinished(FRAME_ANIMATIONS['stretch-paws'], 1_900)).toBe(true);
+    expect(isFinished(FRAME_ANIMATIONS['groom-face'], 1_849)).toBe(false);
+    expect(isFinished(FRAME_ANIMATIONS['groom-face'], 1_850)).toBe(true);
+  });
+
+  it('holds a one-shot nuzzle on its final frame after the calm full sequence', () => {
+    expect(frameIndexFor(FRAME_ANIMATIONS['pet-nuzzle'], 1_600)).toBe(5);
   });
 });
 
 describe('isFinished', () => {
-  it('finishes a one-shot nuzzle after its six frames', () => {
-    expect(isFinished(FRAME_ANIMATIONS['pet-nuzzle'], 840)).toBe(true);
+  it('finishes a one-shot nuzzle after its 1.6-second sequence', () => {
+    expect(isFinished(FRAME_ANIMATIONS['pet-nuzzle'], 1_600)).toBe(true);
   });
 
   it('never finishes the idle loop', () => {

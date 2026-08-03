@@ -31,7 +31,7 @@ try {
     $frame = [System.Drawing.Bitmap]::new(512, 512, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
     $graphics = [System.Drawing.Graphics]::FromImage($frame)
     try {
-      $graphics.Clear([System.Drawing.Color]::FromArgb(255, 255, 0, 255))
+      $graphics.Clear([System.Drawing.Color]::Transparent)
       $graphics.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
       $graphics.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality
       $graphics.CompositingQuality = [System.Drawing.Drawing2D.CompositingQuality]::HighQuality

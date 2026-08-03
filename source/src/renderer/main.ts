@@ -1,5 +1,6 @@
 import { animationForMode } from './animation-profile';
 import { frameActionForPetAction, initialPetState, interact, persistentFrameActionForState, type PetAction, type PetState } from '../shared/pet-machine';
+import { selectClickInteraction, type ClickInteractionAction } from '../shared/click-interaction';
 import type { FrameActionId, PersistedPetState } from '../shared/types';
 import { effectsFor, type EffectKind } from '../shared/effect-sequence';
 import { scheduleAutonomousBehavior } from '../shared/behavior-scheduler';
@@ -33,6 +34,7 @@ let baseImageUrl = '';
 let activeFrameAction: FrameActionId | null = null;
 let frameStartedAt = 0;
 let frameTimer: number | undefined;
+let previousClickAction: ClickInteractionAction | null = null;
 
 function save(): void {
   persisted = { ...persisted, affection: state.affection, lastInteractionAt: state.lastInteractionAt, sleeping: state.sleeping };
@@ -59,6 +61,12 @@ function apply(action: PetAction): void {
   render();
   if (action === 'feed') runEffects('feed');
   save();
+}
+
+function applyRandomClickInteraction(): void {
+  const action = selectClickInteraction(previousClickAction, Math.random());
+  previousClickAction = action;
+  apply(action);
 }
 
 function frameUrl(action: FrameActionId, index: number): string {
@@ -136,7 +144,7 @@ async function boot(): Promise<void> {
 
 pet.addEventListener('click', () => {
   if (ignoreNextClick) { ignoreNextClick = false; return; }
-  apply('pet');
+  applyRandomClickInteraction();
 });
 actions.addEventListener('click', (event) => {
   const action = (event.target as HTMLButtonElement).dataset.action as PetAction | undefined;

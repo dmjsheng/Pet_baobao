@@ -9,9 +9,31 @@ export interface FrameAnimation {
 
 export const FRAME_ANIMATIONS: Record<FrameActionId, FrameAnimation> = {
   'idle-look': { frameCount: 4, frameDurationMs: 0, frameDurationsMs: [3_600, 90, 110, 90], loop: true },
-  'pet-nuzzle': { frameCount: 6, frameDurationMs: 140, loop: false },
+  'pet-nuzzle': {
+    frameCount: 6,
+    frameDurationMs: 0,
+    frameDurationsMs: [230, 220, 260, 300, 310, 280],
+    loop: false,
+  },
   'eat-treat': { frameCount: 6, frameDurationMs: 150, loop: false },
-  'knead-paws': { frameCount: 8, frameDurationMs: 230, loop: false },
+  'knead-paws': {
+    frameCount: 8,
+    frameDurationMs: 0,
+    frameDurationsMs: [260, 280, 300, 370, 370, 300, 280, 260],
+    loop: false,
+  },
+  'stretch-paws': {
+    frameCount: 6,
+    frameDurationMs: 0,
+    frameDurationsMs: [260, 280, 330, 410, 330, 290],
+    loop: false,
+  },
+  'groom-face': {
+    frameCount: 6,
+    frameDurationMs: 0,
+    frameDurationsMs: [250, 270, 330, 420, 330, 250],
+    loop: false,
+  },
   'companion-sit': { frameCount: 4, frameDurationMs: 0, frameDurationsMs: [3_600, 90, 110, 90], loop: true },
   'sleep-curl': { frameCount: 4, frameDurationMs: 1_400, loop: true },
 };

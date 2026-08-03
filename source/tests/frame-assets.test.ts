@@ -8,6 +8,8 @@ const expectedFrames = {
   'pet-nuzzle': 6,
   'eat-treat': 6,
   'knead-paws': 8,
+  'stretch-paws': 6,
+  'groom-face': 6,
   'companion-sit': 4,
   'sleep-curl': 4,
 } as const;

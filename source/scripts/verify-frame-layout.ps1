@@ -10,6 +10,8 @@ $limits = @{
   'pet-nuzzle' = @{ CenterTolerance = 3; SizeTolerance = 0.02 }
   'eat-treat' = @{ CenterTolerance = 3; SizeTolerance = 0.02 }
   'knead-paws' = @{ CenterTolerance = 3; WidthTolerance = 0.02; HeightTolerance = 0.03; VerticalAnchor = 'top' }
+  'stretch-paws' = @{ CenterTolerance = 3; WidthTolerance = 0.05; HeightTolerance = 0.13; VerticalAnchor = 'top' }
+  'groom-face' = @{ CenterTolerance = 3; WidthTolerance = 0.02; HeightTolerance = 0.03; VerticalAnchor = 'top' }
 }
 
 function Get-AlphaBounds([string]$Path) {

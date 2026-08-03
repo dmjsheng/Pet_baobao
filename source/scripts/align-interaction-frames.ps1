@@ -11,6 +11,8 @@ $sequenceMaps = @{
   'pet-nuzzle' = @(0, 1, 2, 3, 2, 1)
   'eat-treat' = @(0, 1, 2, 3, 2, 1)
   'knead-paws' = @(0, 1, 2, 3, 0, 1, 2, 3)
+  'stretch-paws' = @(0, 1, 2, 3, 2, 1)
+  'groom-face' = @(0, 1, 2, 3, 2, 1)
 }
 
 function Get-AlphaBounds([System.Drawing.Bitmap]$Bitmap) {
@@ -129,7 +131,8 @@ foreach ($action in $sequenceMaps.Keys) {
     $normalized = @()
     try {
       for ($index = 0; $index -lt $sourceFrames.Count; $index++) {
-        $normalized += (New-NormalizedFrame $sourceFrames[$index] $bounds[$index] $targetWidth $targetHeight $targetBottom ($action -eq 'knead-paws'))
+        $preserveNaturalProportions = $action -in @('knead-paws', 'stretch-paws', 'groom-face')
+        $normalized += (New-NormalizedFrame $sourceFrames[$index] $bounds[$index] $targetWidth $targetHeight $targetBottom $preserveNaturalProportions)
       }
 
       $destination = Join-Path $OutputRoot $action
